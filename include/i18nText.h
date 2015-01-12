@@ -11,29 +11,23 @@
 using namespace std;
 using namespace cv;
 
-struct SizeDesc {
-    float pixelSize;  /// Size of character.
-    float space;   /// Default width of character. Only used when FT_Render_Glyph() failed to get character width.
-    float gap;  /// Gap between characters.
-};
-
 class i18nText {
 public:
-    i18nText();
-    ~i18nText();
-    bool isValid(void);
-    bool setFont(const char* name);
-    void setSize(SizeDesc* size = NULL);
-    int putText(Mat& img, const wchar_t* text, Point pos, Scalar color = CV_RGB(0, 0, 0));
+	i18nText();
+	i18nText(const string& path, uint size = 25, float space = 0.5, float gap = 0.1);
+	~i18nText();
+	void setFont(const string& path);
+	void setStyle(uint size, float space, float gap);
+	int putText(Mat& img, const wstring& text, Point pos, Scalar color = CV_RGB(0, 0, 0));
 
 private:
-    void putWChar(Mat& img, wchar_t wc, Point& pos, Scalar color);
+	void putWChar(Mat& img, wchar_t wc, Point& pos, Scalar color);
 
-    static int counter;
-    static FT_Library library;
-    bool valid;
-    FT_Face face;
-    SizeDesc size;
+	FT_Library library;
+	FT_Face face;
+	uint size = 25;
+	float space = 0.5;
+	float gap = 0.1;
 };
 
 #endif // _I18N_TEXT_H_
