@@ -32,7 +32,7 @@ void i18nText::setStyle(uint size, float space, float gap) {
 }
 
 void i18nText::putText(Mat& img, const wstring& text, Point pos, Scalar color) {
-	CV_Assert(img.empty() == false);
+	CV_Assert(!img.empty());
 
 	for(const wchar_t& ch : text){
 		putWChar(img, ch, pos, color);
