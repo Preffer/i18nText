@@ -1,10 +1,3 @@
-// Copyright [2014] <cuizhaohui>
-/**
- * \file i18nText.cpp
- * \author CUI Zhao-hui, zhh.cui@gmail.com
- * \date 2014-07-01
- */
-
 #include "../include/i18nText.h"
 
 int i18nText::counter = 0;
@@ -107,4 +100,3 @@ void i18nText::putWChar(cv::Mat &img, wchar_t wc, cv::Point &pos, cv::Scalar col
 
     pos.x += (int)((cols ? cols : space) + gap);
 }
-
