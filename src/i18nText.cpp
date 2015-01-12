@@ -1,5 +1,5 @@
-#include "../include/i18nText.h"
 #include <stdexcept>
+#include "../include/i18nText.h"
 
 i18nText::i18nText() {
 	if(FT_Init_FreeType(&library)){
@@ -28,20 +28,18 @@ void i18nText::setStyle(uint size, float space, float gap) {
 	this->size = size;
 	this->space = space;
 	this->gap = gap;
+	FT_Set_Pixel_Sizes(face, size, 0);
 }
 
-int i18nText::putText(Mat& img, const wstring& text, Point pos, Scalar color) {
-	if (img.rows <= 0 || img.cols <= 0 || !img.data)
-		return -1;
+void i18nText::putText(Mat& img, const wstring& text, Point pos, Scalar color) {
+	CV_Assert(img.empty() == false);
 
 	for(const wchar_t& ch : text){
 		putWChar(img, ch, pos, color);
 	}
-
-	return text.size();
 }
 
-void i18nText::putWChar(Mat &img, wchar_t wc, Point &pos, Scalar color) {
+void i18nText::putWChar(Mat& img, wchar_t wc, Point& pos, Scalar& color) {
 	FT_UInt glyph_index = FT_Get_Char_Index(face, wc);
 	FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
 	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_MONO);
@@ -55,24 +53,18 @@ void i18nText::putWChar(Mat &img, wchar_t wc, Point &pos, Scalar color) {
 			int off  = ((0 == 0) ? i : (rows - 1 - i)) * slot->bitmap.pitch + j / 8;
 			if (slot->bitmap.buffer[off] & (0xC0 >> (j % 8))) {
 				int r = (0 == 0) ? pos.y - (rows - 1 - i) : pos.y + i;
-				;
 				int c = pos.x + j;
 
 				if (r >= 0 && r < img.rows && c >= 0 && c < img.cols) {
 					Vec3b scalar = img.at<Vec3b>(r, c);
-
 					for (int k = 0; k < 3; ++k) {
 						scalar.val[k] = color.val[k];
 					}
-
 					img.at<Vec3b>(r, c) = scalar;
 				}
 			}
 		}
 	}
 
-	double t_space = size * space;
-	double t_gap = size * gap;
-
-	pos.x += (int)((cols ? cols : t_space) + t_gap);
+	pos.x += (int)((cols ? cols : size * space) + size * gap);
 }
