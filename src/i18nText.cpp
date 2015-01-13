@@ -1,7 +1,6 @@
 #include <stdexcept>
 #include "../include/i18nText.h"
 
-
 i18nText::i18nText() {
 	if(FT_Init_FreeType(&library)){
 		throw runtime_error("Failed to initialize FreeType");
